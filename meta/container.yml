@@ -1,0 +1,4 @@
+from: 'centos:7'
+ports:
+- 8081:8081
+command: [/opt/nexus-latest/bin/start-nexus.sh]
