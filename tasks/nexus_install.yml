@@ -217,7 +217,7 @@
   when: ansible_connection != 'docker'
 
 - name: Start Nexus
-  shell: '/sbin/start-nexus.sh'
+  shell: 'exec {{ nexus_installation_dir }}/nexus-latest/bin/nexus run &'
   when: ansible_connection == 'docker'
 
 - name: Waiting for Nexus service to be ready...
