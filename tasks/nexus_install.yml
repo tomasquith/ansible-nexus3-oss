@@ -306,3 +306,4 @@
     job: "/sbin/nexus-blob-backup.sh 2>&1 | tee {{ nexus_backup_log }}"
     state: present
     user: "root"
+  when: ansible_connection != 'docker'
