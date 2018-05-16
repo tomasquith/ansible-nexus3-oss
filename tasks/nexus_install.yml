@@ -185,6 +185,8 @@
     src: "{{ item }}.j2"
     dest: "{{ nexus_script_dir }}/{{ item }}"
     mode: 0755
+    owner: "{{ nexus_os_user }}"
+    group: "{{ nexus_os_group }}"
   with_items: "{{ nexus_deployed_scripts }}"
 
 - name: "Symlink scripts to /sbin"
@@ -231,11 +233,11 @@
     port: "{{ nexus_default_port }}"
     delay: 5
 
-- name: Chown configuration files from {{ nexus_installation_dir }}/nexus-latest/etc back to root
+- name: Chown configuration files from {{ nexus_installation_dir }}/nexus-latest
   file:
-    path: "{{ nexus_installation_dir }}/nexus-latest/etc"
-    owner: "root"
-    group: "root"
+    path: "{{ nexus_installation_dir }}/nexus-latest"
+    owner: "{{ nexus_os_user }}"
+    group: "{{ nexus_os_group }}"
     mode: "0644"
     recurse: true
 
@@ -243,8 +245,8 @@
   file:
     path: "{{ item }}"
     state: "directory"
-    owner: "root"
-    group: "root"
+    owner: "{{ nexus_os_user }}"
+    group: "{{ nexus_os_group }}"
     mode: "0755"
     recurse: false
   with_items: "{{ nexus_app_dir_settings_dirs }}"
@@ -305,5 +307,5 @@
     hour: "21"
     job: "/sbin/nexus-blob-backup.sh 2>&1 | tee {{ nexus_backup_log }}"
     state: present
-    user: "root"
+    user: "{{ nexus_os_user }}"
   when: ansible_connection != 'docker'
