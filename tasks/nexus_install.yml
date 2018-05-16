@@ -34,10 +34,11 @@
   stat:
     path: /etc/systemd/system/nexus.service
   register: nexus_systemd_service_file
+  when: ansible_connection != 'docker'
 
 - name: Stop systemd service
   shell: 'systemctl stop nexus.service'
-  when: nexus_systemd_service_file.stat.exists
+  when: nexus_systemd_service_file.stat.exists and ansible_connection != 'docker'
 
 - name: Update symlink nexus-latest
   file:
@@ -166,6 +167,7 @@
   template:
     src: "nexus.service"
     dest: "/etc/systemd/system"
+  when: ansible_connection != 'docker'
 
 # systemd available from ansible 2.2 only
 # - name: Enable nexus service
@@ -176,6 +178,7 @@
     nexus_deployed_scripts:
       - nexus-blob-backup.sh
       - nexus-blob-restore.sh
+      - start-nexus.sh
 
 - name: "Deploy scripts"
   template:
