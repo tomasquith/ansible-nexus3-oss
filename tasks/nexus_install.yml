@@ -206,23 +206,28 @@
 
 - name: Reload systemd service configuration
   shell: 'systemctl daemon-reload'
+  when: ansible_connection != 'docker'
 
 - name: Enable systemd service
   shell: 'systemctl enable nexus.service'
+  when: ansible_connection != 'docker'
 
 - name: Restart systemd service
   shell: 'systemctl restart nexus.service'
+  when: ansible_connection != 'docker'
 
 - name: Waiting for Nexus service to be ready...
   wait_for:
     path: "{{ nexus_data_dir }}/log/nexus.log"
     search_regex: "Started Sonatype Nexus OSS .*"
     timeout: 1800
+  when: ansible_connection != 'docker'
 
 - name: Waiting for nexus to be ready...
   wait_for:
     port: "{{ nexus_default_port }}"
     delay: 5
+  when: ansible_connection != 'docker'
 
 - name: Chown configuration files from {{ nexus_installation_dir }}/nexus-latest/etc back to root
   file:
