@@ -38,7 +38,7 @@
 
 - name: Stop systemd service
   shell: 'systemctl stop nexus.service'
-  when: nexus_systemd_service_file.stat.exists and ansible_connection != 'docker'
+  when: ansible_connection != 'docker' and nexus_systemd_service_file.stat.exists
 
 - name: Update symlink nexus-latest
   file:
